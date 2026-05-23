@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Heran ICT">
+<meta name="theme-color" content="#F97316">
+<title>Heran ICT — Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#080808;--bg2:#111;--bg3:#181818;--bg4:#222;
+  --or:#F97316;--or2:#FB923C;--or-d:rgba(249,115,22,.12);--or-d2:rgba(249,115,22,.22);
+  --red:#ef4444;--red-d:rgba(239,68,68,.12);
+  --grn:#22c55e;--grn-d:rgba(34,197,94,.12);
+  --amb:#f59e0b;--amb-d:rgba(245,158,11,.12);
+  --blu:#3b82f6;--blu-d:rgba(59,130,246,.12);
+  --pur:#a78bfa;--pur-d:rgba(167,139,250,.12);
+  --txt:#ede8df;--txt2:#9a9080;--txt3:#504540;
+  --bdr:rgba(249,115,22,.14);--bdr2:rgba(249,115,22,.28);--bdr3:rgba(249,115,22,.5);
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+  --r:8px;--rl:13px;
+  /* Base font — slightly larger for readability */
+  --fs-base:15px;
+  --fs-sm:13px;
+  --fs-xs:12px;
+  --fs-2xs:11px;
+  --fs-lg:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:var(--fs-base);}
+body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-height:100vh;-webkit-text-size-adjust:100%;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--bdr3);border-radius:2px;}
+
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;}
+
+/* ── DESKTOP HEADER (tabs across top) ── */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid var(--bdr);background:var(--bg2);flex-shrink:0;gap:12px;}
+.logo{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--or);display:flex;align-items:center;gap:7px;white-space:nowrap;}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--or);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.tabs{display:flex;gap:1px;background:var(--bg3);border-radius:var(--r);padding:3px;flex-shrink:0;}
+.tab{padding:6px 14px;border-radius:6px;font-size:var(--fs-sm);font-weight:500;cursor:pointer;color:var(--txt2);border:none;background:transparent;font-family:var(--sans);transition:all .14s;letter-spacing:.02em;-webkit-tap-highlight-color:transparent;}
+.tab:hover{color:var(--txt);}
+.tab.on{background:var(--or-d);color:var(--or);border:1px solid var(--bdr2);}
+.hdr-r{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.mkt{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:600;padding:3px 8px;border-radius:8px;}
+.mkt-open{background:var(--grn-d);color:var(--grn);border:1px solid rgba(34,197,94,.3);}
+.mkt-closed{background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.mkt-pre{background:var(--amb-d);color:var(--amb);border:1px solid rgba(245,158,11,.3);}
+.clock{font-family:var(--mono);font-size:var(--fs-2xs);color:var(--txt3);}
+
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bg2);border-top:1px solid var(--bdr);padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom));display:none;justify-content:space-around;align-items:center;gap:2px;}
+.mnav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:8px;border:none;background:transparent;color:var(--txt3);font-family:var(--sans);font-size:10px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;flex:1;min-width:0;transition:all .14s;letter-spacing:.02em;}
+.mnav-btn i{font-size:20px;line-height:1;}
+.mnav-btn.on{color:var(--or);background:var(--or-d);}
+.mnav-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;padding:16px 18px;-webkit-overflow-scrolling:touch;}
+.pg{display:none;}.pg.on{display:block;}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;margin-bottom:12px;}
+.card-hdr{padding:10px 15px;display:flex;align-items:center;gap:8px;font-size:var(--fs-sm);font-weight:500;border-bottom:1px solid var(--bdr);letter-spacing:.03em;}
+.hdr-bull{background:var(--grn-d);color:var(--grn);}
+.hdr-bear{background:var(--red-d);color:var(--red);}
+.hdr-mgmt{background:var(--blu-d);color:var(--blu);}
+.hdr-or{background:var(--or-d);color:var(--or);}
+.hdr-pur{background:var(--pur-d);color:var(--pur);}
+.hdr-neu{background:var(--bg3);color:var(--txt2);}
+
+/* ── CHECKLIST ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cls{padding:8px 14px;}
+.slbl{font-size:var(--fs-2xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);padding:9px 0 4px;display:flex;align-items:center;gap:6px;}
+.slbl::after{content:'';flex:1;height:1px;background:var(--bdr);}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:6px 4px;cursor:pointer;border-radius:6px;transition:background .1s;-webkit-tap-highlight-color:transparent;}
+.ci:active{background:var(--bg3);}
+.cb{width:18px;height:18px;border:1.5px solid var(--bdr3);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.ci.ck .cb{background:var(--or);border-color:var(--or);}
+.ci.ck .cb::after{content:'';width:9px;height:5px;border-left:2px solid #000;border-bottom:2px solid #000;transform:rotate(-45deg) translate(1px,-1px);display:block;}
+.ci.ck .ct{text-decoration:line-through;color:var(--txt3);}
+.ct{font-size:var(--fs-sm);line-height:1.5;color:var(--txt2);}
+.ct b{color:var(--or);font-weight:500;}
+.pbar{height:3px;background:var(--bg3);}
+.pfill{height:100%;border-radius:2px;transition:width .3s;background:var(--or);}
+.pinfo{display:flex;justify-content:space-between;align-items:center;padding:8px 15px;font-size:var(--fs-xs);color:var(--txt3);}
+.rbtn{font-size:var(--fs-xs);color:var(--txt3);cursor:pointer;border:none;background:none;padding:4px 8px;border-radius:5px;font-family:var(--sans);-webkit-tap-highlight-color:transparent;}
+.rbtn:active{color:var(--or);background:var(--or-d);}
+.bs{font-size:var(--fs-2xs);font-weight:600;padding:2px 8px;border-radius:10px;font-family:var(--mono);margin-left:auto;}
+.bg-a{background:var(--or-d);color:var(--or);border:1px solid var(--bdr2);}
+.bg-b{background:var(--pur-d);color:var(--pur);border:1px solid rgba(167,139,250,.28);}
+.bg-bull{background:var(--grn-d);color:var(--grn);border:1px solid rgba(34,197,94,.28);}
+.bg-bear{background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.28);}
+.bg-blu{background:var(--blu-d);color:var(--blu);border:1px solid rgba(59,130,246,.28);}
+.tgnew{font-size:var(--fs-2xs);background:var(--pur-d);color:var(--pur);padding:2px 6px;border-radius:3px;border:1px solid rgba(167,139,250,.28);margin-left:3px;font-weight:500;}
+
+/* ── FORMS ── */
+.fl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.flbl{font-size:var(--fs-xs);font-weight:500;color:var(--txt3);letter-spacing:.05em;text-transform:uppercase;}
+input,select{padding:10px 12px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--bg3);color:var(--txt);font-size:var(--fs-base);font-family:var(--mono);outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none;appearance:none;}
+input:focus,select:focus{border-color:var(--or);}
+input::placeholder{color:var(--txt3);}
+select option{background:var(--bg3);}
+.cbtn{padding:10px 18px;border-radius:var(--r);background:var(--or);color:#000;border:none;font-size:var(--fs-base);font-weight:600;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:opacity .15s;display:inline-flex;align-items:center;gap:6px;-webkit-tap-highlight-color:transparent;}
+.cbtn:active{opacity:.8;}
+.gbtn{padding:9px 14px;border-radius:var(--r);border:1px solid var(--bdr2);background:transparent;font-size:var(--fs-sm);font-weight:500;cursor:pointer;color:var(--txt2);font-family:var(--sans);transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;-webkit-tap-highlight-color:transparent;}
+.gbtn:active{background:var(--or-d);color:var(--or);border-color:var(--bdr3);}
+.gbtn.pri{background:var(--or-d);color:var(--or);border-color:var(--bdr3);}
+.row-gap{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px;}
+
+/* ── STRIKE TABLE ── */
+.stbl{border:1px solid var(--bdr);border-radius:var(--rl);overflow-x:auto;margin-top:12px;-webkit-overflow-scrolling:touch;}
+.stbl table{width:100%;border-collapse:collapse;min-width:520px;}
+.stbl th{font-size:var(--fs-2xs);font-weight:600;color:var(--txt3);padding:8px 11px;text-align:left;background:var(--bg3);border-bottom:1px solid var(--bdr);font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;}
+.stbl td{font-size:var(--fs-sm);padding:10px 11px;border-bottom:1px solid var(--bdr);font-family:var(--mono);color:var(--txt2);}
+.stbl tr:last-child td{border-bottom:none;}
+.stbl tr.hl td{background:rgba(249,115,22,.07);}
+.stbl tr.hl td:first-child{border-left:2px solid var(--or);}
+.stbl tr.hl td.pc{color:var(--or);font-weight:700;}
+.t-ideal{font-size:var(--fs-2xs);background:var(--or-d);color:var(--or);padding:2px 6px;border-radius:3px;font-family:var(--sans);border:1px solid var(--bdr2);}
+.t-ok{font-size:var(--fs-2xs);background:var(--amb-d);color:var(--amb);padding:2px 6px;border-radius:3px;font-family:var(--sans);}
+.t-av{font-size:var(--fs-2xs);background:var(--red-d);color:var(--red);padding:2px 6px;border-radius:3px;font-family:var(--sans);}
+.fetchst{font-size:var(--fs-xs);font-family:var(--mono);color:var(--txt3);margin-top:4px;}
+
+/* ── WORKFLOW STEPS ── */
+.steps{display:flex;flex-direction:column;}
+.step{display:grid;grid-template-columns:38px 1fr;gap:0;position:relative;}
+.step:not(:last-child)::before{content:'';position:absolute;left:18px;top:38px;bottom:0;width:1px;background:var(--bdr);}
+.snum{width:36px;height:36px;border-radius:50%;border:1px solid var(--bdr2);background:var(--or-d);color:var(--or);font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.sbody{padding:0 0 20px 14px;}
+.stitle{font-size:var(--fs-base);font-weight:500;color:var(--txt);margin-bottom:5px;}
+.sdesc{font-size:var(--fs-sm);color:var(--txt2);line-height:1.8;}
+.sdesc b{color:var(--or);font-weight:500;}
+.stag{font-size:var(--fs-xs);padding:3px 8px;border-radius:4px;display:inline-block;margin-top:6px;font-weight:500;}
+
+/* ── RISK ── */
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;}
+.rc{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 14px;}
+.rclbl{font-size:var(--fs-xs);color:var(--txt3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
+.rcval{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--or);}
+.rcsub{font-size:var(--fs-xs);color:var(--txt3);margin-top:2px;}
+.ptrow{display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--bg3);margin-bottom:7px;}
+.ptn{font-family:var(--mono);font-size:var(--fs-xs);font-weight:700;padding:3px 9px;border-radius:4px;white-space:nowrap;}
+.pt1{background:var(--or-d);color:var(--or);border:1px solid var(--bdr2);}
+.pt2{background:var(--grn-d);color:var(--grn);border:1px solid rgba(34,197,94,.3);}
+.ptst{background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.ptxt{font-size:var(--fs-sm);color:var(--txt2);flex:1;line-height:1.5;}
+.ppct{font-family:var(--mono);font-size:var(--fs-sm);color:var(--txt3);}
+
+/* ── NEWS ── */
+.nrow{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;padding:11px 13px;border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:7px;background:var(--bg3);}
+.nrow.hi{border-left:2px solid var(--red);}
+.nrow.med{border-left:2px solid var(--amb);}
+.imp{font-size:var(--fs-2xs);font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.06em;white-space:nowrap;font-family:var(--mono);}
+.ih{background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.im{background:var(--amb-d);color:var(--amb);border:1px solid rgba(245,158,11,.3);}
+.il{background:var(--grn-d);color:var(--grn);border:1px solid rgba(34,197,94,.3);}
+.ntm{font-family:var(--mono);font-size:var(--fs-2xs);color:var(--txt3);text-align:right;white-space:nowrap;line-height:1.6;}
+
+/* ── UTILITY ── */
+.ibox{padding:12px 14px;border:1px solid var(--bdr);border-radius:var(--r);font-size:var(--fs-sm);color:var(--txt2);line-height:1.8;margin-bottom:10px;background:var(--bg3);}
+.ibox strong{color:var(--or);font-weight:500;}
+.sech{font-size:var(--fs-2xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.sech::after{content:'';flex:1;height:1px;background:var(--bdr);}
+.no-z{text-align:center;padding:24px;color:var(--txt3);font-size:var(--fs-sm);border:1px dashed var(--bdr);border-radius:var(--r);font-family:var(--mono);}
+.lnk{color:var(--or);text-decoration:none;border-bottom:1px solid var(--bdr2);padding-bottom:1px;font-size:var(--fs-sm);}
+.lnk:hover{color:var(--or2);}
+.trade-type{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:12px;font-size:var(--fs-xs);font-weight:600;font-family:var(--mono);}
+.ta{background:var(--or-d);color:var(--or);border:1px solid var(--bdr2);}
+.tb{background:var(--pur-d);color:var(--pur);border:1px solid rgba(167,139,250,.28);}
+
+/* ══════════════════════════════════════════════
+   MOBILE BREAKPOINT  ≤ 640px
+   ══════════════════════════════════════════════ */
+@media (max-width:640px){
+  :root{
+    --fs-base:16px;
+    --fs-sm:14px;
+    --fs-xs:13px;
+    --fs-2xs:12px;
+    --fs-lg:18px;
+  }
+
+  /* Header: hide desktop tabs + clock, show only logo + market badge */
+  .hdr{padding:0 14px;height:48px;}
+  .tabs{display:none;}
+  .hdr-r .clock{display:none;}
+
+  /* Show mobile bottom nav */
+  .mob-nav{display:flex;}
+
+  /* Main gets bottom padding so content isn't behind nav */
+  .main{padding:14px 14px calc(72px + env(safe-area-inset-bottom));overflow-y:auto;}
+
+  /* Checklist: single column on mobile */
+  .g2{grid-template-columns:1fr;}
+
+  /* Management card: stack columns */
+  .g2 .card[style*="grid-column"] > div[style*="grid-template-columns"]{
+    grid-template-columns:1fr !important;
+  }
+
+  /* Risk grid: 1 col on very small, 2 on slightly larger */
+  .rgrid{grid-template-columns:1fr 1fr;}
+  .rcval{font-size:18px;}
+
+  /* Strike table: horizontal scroll with hint */
+  .stbl{overflow-x:auto;}
+
+  /* Forms: full width stacking */
+  .row-gap{flex-direction:column;align-items:stretch;}
+  .row-gap > .fg{min-width:unset !important;width:100%;}
+  .row-gap > div:last-child{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* Larger touch targets */
+  .ci{padding:8px 4px;}
+  .cb{width:20px;height:20px;}
+  .ci.ck .cb::after{width:10px;height:6px;}
+
+  /* Workflow steps */
+  .step{grid-template-columns:36px 1fr;}
+  .snum{width:34px;height:34px;}
+
+  /* News grid on mobile: single col */
+  #pg-nw [style*="grid-template-columns:1fr 1fr"]{
+    display:flex;flex-direction:column;
+  }
+
+  /* Buttons full width on mobile forms */
+  .cbtn{justify-content:center;}
+
+  /* ibox text larger on mobile */
+  .ibox{font-size:var(--fs-sm);}
+
+  /* PT rows: wrap on small screens */
+  .ptrow{flex-wrap:wrap;gap:8px;}
+  .ppct{width:100%;text-align:right;}
+}
+
+@media (max-width:400px){
+  :root{--fs-base:15px;--fs-sm:13px;--fs-xs:12px;--fs-2xs:11px;}
+  .rgrid{grid-template-columns:1fr;}
+  .hdr .logo span:last-child{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Mobile bottom nav -->
+<nav class="mob-nav" id="mob-nav">
+  <button class="mnav-btn on" onclick="pg('wf',this)" data-pg="wf"><i class="ti ti-list-check"></i><span>Workflow</span></button>
+  <button class="mnav-btn" onclick="pg('cl',this)" data-pg="cl"><i class="ti ti-checkbox"></i><span>Checklist</span></button>
+  <button class="mnav-btn" onclick="pg('st',this)" data-pg="st"><i class="ti ti-chart-candle"></i><span>Strikes</span></button>
+  <button class="mnav-btn" onclick="pg('nw',this)" data-pg="nw"><i class="ti ti-news"></i><span>News</span></button>
+  <button class="mnav-btn" onclick="pg('ri',this)" data-pg="ri"><i class="ti ti-coin"></i><span>Risk</span></button>
+</nav>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo"><div class="ldot"></div>HERAN ICT — OPTIONS <span style="color:var(--txt3);font-weight:400;font-size:11px;margin-left:2px">v5</span></div>
+  <div class="tabs">
+    <button class="tab on" onclick="pg('wf',this)">Workflow</button>
+    <button class="tab" onclick="pg('cl',this)">Checklist</button>
+    <button class="tab" onclick="pg('st',this)">Strikes</button>
+    <button class="tab" onclick="pg('nw',this)">News</button>
+    <button class="tab" onclick="pg('ri',this)">Risk ($9K)</button>
+  </div>
+  <div class="hdr-r">
+    <span id="greeting" style="font-family:var(--mono);font-size:20px;color:var(--or2);white-space:nowrap;letter-spacing:.04em;"></span>
+    <span class="mkt" id="mkt-badge">--</span>
+    <span class="clock" id="clock">--:--:-- ET</span>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════════════════ WORKFLOW -->
+<div class="pg on" id="pg-wf">
+  <div class="g2" style="margin-bottom:11px">
+    <div class="ibox" style="margin:0">
+      <strong>A-Trade (4H+1H)</strong> — Full confluence. Highest win rate. Risk 3–5%.<br>
+      4H bias + 4H HH/HL + 1H above SMA + 1H disp vol ≥1.5× + 1H FVG retest.
+    </div>
+    <div class="ibox" style="margin:0;border-color:rgba(167,139,250,.25)">
+      <strong style="color:var(--pur)">B-Trade (1H+15M)</strong> — Frequent, lower conviction. Risk 2% max.<br>
+      1H above SMA + 1H disp vol ≥1.5× + 15M above SMA (slope up) + 1H FVG retest.
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="snum">1</div><div class="sbody">
+      <div class="stitle">Pre-market — Set 4H bias (8:00–9:15 AM ET)</div>
+      <div class="sdesc">Open TradingView on <b>4H chart</b>. Is price above/below 50 SMA? Is SMA sloping? Are you seeing HH/HL (bull) or LL/LH (bear)? This is your <b>A-Trade direction for the day</b>. If 4H is ranging — A-trades are off. B-trades remain available if 1H + 15M align.<br>
+      The Pine Script dashboard shows all of this live — green/red on every check.</div>
+      <span class="stag" style="background:var(--or-d);color:var(--or)">Before open</span>
+    </div></div>
+
+    <div class="step"><div class="snum">2</div><div class="sbody">
+      <div class="stitle">TradingView alert fires — A or B signal</div>
+      <div class="sdesc">Pine Script auto-checks all structural conditions and fires the correct alert:<br>
+      <b>BULL A / BEAR A</b> — all 4H+1H checks passed. Highest priority.<br>
+      <b style="color:var(--pur)">BULL B / BEAR B</b> — 1H+15M aligned, no 4H required. More frequent.<br>
+      Alert message tells you which trade type and confirms which checks passed.</div>
+      <span class="stag" style="background:var(--or-d);color:var(--or)">Alert driven</span>
+    </div></div>
+
+    <div class="step"><div class="snum">3</div><div class="sbody">
+      <div class="stitle">Switch to 15M — confirm entry candle</div>
+      <div class="sdesc">Drop to <b>15M chart</b>. Wait for:<br>
+      <b>Bull:</b> 15M candle that closes above midpoint inside FVG — volume ≥1.2× avg. Engulf or BOS preferred.<br>
+      <b>Bear:</b> 15M rejection wick or bearish close showing sellers — same volume rule.<br>
+      If first 15M candle is indecisive (doji/small body) — wait one more. Max 2–3 candles then skip.</div>
+      <span class="stag" style="background:var(--amb-d);color:var(--amb)">On alert — max 3 candles</span>
+    </div></div>
+
+    <div class="step"><div class="snum">4</div><div class="sbody">
+      <div class="stitle">Run options checklist — Strikes tab + Market Chameleon</div>
+      <div class="sdesc">Go to <b>Strikes tab</b> → select ticker → fetch live price → Find Strikes. Select ideal delta range (0.50–0.63).<br>
+      Open <a href="https://marketchameleon.com" target="_blank" class="lnk">marketchameleon.com</a> to confirm: IV rank (want 15–40), earnings date (avoid within 3–5 days), term structure.<br>
+      On broker options chain verify: OI ≥500, tight bid/ask, theta ≤8%/day.<br>
+      <b>DTE rule:</b> IV rank &lt;20 → 10–14 DTE. IV rank 20–40 → 14–21 DTE.</div>
+      <span class="stag" style="background:var(--or-d);color:var(--or)">Before placing order</span>
+    </div></div>
+
+    <div class="step"><div class="snum">5</div><div class="sbody">
+      <div class="stitle">Size the trade — Risk tab</div>
+      <div class="sdesc">Go to <b>Risk tab</b>. Enter the option ask price.<br>
+      <b>A-Trade:</b> 3% risk standard ($270), 5% on high-conviction ($450).<br>
+      <b style="color:var(--pur)">B-Trade:</b> 2% max ($180). B-trades are frequent — protect capital.<br>
+      Calculator shows exact contracts, total cost, and all PT levels.</div>
+      <span class="stag" style="background:var(--or-d);color:var(--or)">Before entry</span>
+    </div></div>
+
+    <div class="step"><div class="snum">6</div><div class="sbody">
+      <div class="stitle">Enter — set stop immediately</div>
+      <div class="sdesc">Enter at market or limit (1¢ above ask). Immediately set:<br>
+      <b>Hard stop:</b> option premium drops 40% from entry — exit no questions asked.<br>
+      <b>Time stop:</b> if no movement after 45–60 min, exit. Theta is working against you.</div>
+      <span class="stag" style="background:var(--red-d);color:var(--red)">Entry + stops</span>
+    </div></div>
+
+    <div class="step"><div class="snum">7</div><div class="sbody">
+      <div class="stitle">Manage — tiered exits</div>
+      <div class="sdesc">
+      <b>PT1 +30–35%:</b> Sell 40% — move stop to breakeven on rest.<br>
+      <b>PT2 +55–65%:</b> Sell another 35% — now running 25% free.<br>
+      <b>Runner +80–100%+:</b> Trail at -20% from premium high. Exit by 3:45 PM.<br>
+      If PT1 fires and price pulls back to entry — close everything. Never give back a win.</div>
+      <span class="stag" style="background:var(--grn-d);color:var(--grn)">During trade</span>
+    </div></div>
+
+    <div class="step"><div class="snum">8</div><div class="sbody">
+      <div class="stitle">Exit rules — time and structure</div>
+      <div class="sdesc">
+      Close all same-day trades by <b>3:45 PM ET</b> — spreads widen in last 15 min.<br>
+      <b>Friday rule:</b> close 100% by 3:00 PM. No overnight, no exceptions.<br>
+      <b>Structure break:</b> 1H candle closes through FVG midpoint against trade → exit immediately.<br>
+      <b>5 DTE rule:</b> any runner reaching 5 DTE remaining → close regardless of P&L.<br>
+      <b>Daily loss limit:</b> 2 consecutive losses → done for the day.</div>
+      <span class="stag" style="background:var(--red-d);color:var(--red)">Exit discipline</span>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ CHECKLIST -->
+<div class="pg" id="pg-cl">
+  <div class="g2">
+
+    <!-- A-TRADE BULL -->
+    <div class="card">
+      <div class="card-hdr hdr-bull"><i class="ti ti-trending-up"></i> A-Trade — Bullish Calls <span class="bs bg-a" id="bsc-ab">0/6</span></div>
+      <div class="pbar"><div class="pfill" id="pf-ab" style="width:0%"></div></div>
+      <div class="cls">
+        <div class="slbl">4H bias</div>
+        <div class="ci" onclick="ck(this,'ab')" data-g="ab"><div class="cb"></div><div class="ct">4H: Price above 50 SMA</div></div>
+        <div class="ci" onclick="ck(this,'ab')" data-g="ab"><div class="cb"></div><div class="ct">4H: HH &amp; HL structure confirmed</div></div>
+        <div class="slbl">1H structure</div>
+        <div class="ci" onclick="ck(this,'ab')" data-g="ab"><div class="cb"></div><div class="ct">1H: Price above 50 SMA</div></div>
+        <div class="ci" onclick="ck(this,'ab')" data-g="ab"><div class="cb"></div><div class="ct">1H: Displacement volume <b>≥1.5×</b> avg</div></div>
+        <div class="ci" onclick="ck(this,'ab')" data-g="ab"><div class="cb"></div><div class="ct">1H: Retrace volume <b>≤0.7×</b> avg (light)</div></div>
+        <div class="ci" onclick="ck(this,'ab')" data-g="ab"><div class="cb"></div><div class="ct">1H: Price retesting bullish FVG</div></div>
+      </div>
+      <div class="pinfo"><span id="pct-ab">0% complete</span><button class="rbtn" onclick="rst('ab')">Reset</button></div>
+    </div>
+
+    <!-- A-TRADE BEAR -->
+    <div class="card">
+      <div class="card-hdr hdr-bear"><i class="ti ti-trending-down"></i> A-Trade — Bearish Puts <span class="bs bg-a" id="bsc-rb">0/6</span></div>
+      <div class="pbar"><div class="pfill" id="pf-rb" style="background:var(--red);width:0%"></div></div>
+      <div class="cls">
+        <div class="slbl">4H bias</div>
+        <div class="ci" onclick="ck(this,'rb')" data-g="rb"><div class="cb"></div><div class="ct">4H: Price below 50 SMA</div></div>
+        <div class="ci" onclick="ck(this,'rb')" data-g="rb"><div class="cb"></div><div class="ct">4H: LL &amp; LH structure confirmed</div></div>
+        <div class="slbl">1H structure</div>
+        <div class="ci" onclick="ck(this,'rb')" data-g="rb"><div class="cb"></div><div class="ct">1H: Price below 50 SMA</div></div>
+        <div class="ci" onclick="ck(this,'rb')" data-g="rb"><div class="cb"></div><div class="ct">1H: Sell-side volume <b>≥1.5×</b> avg</div></div>
+        <div class="ci" onclick="ck(this,'rb')" data-g="rb"><div class="cb"></div><div class="ct">1H: Retrace volume <b>≤0.7×</b> avg (light)</div></div>
+        <div class="ci" onclick="ck(this,'rb')" data-g="rb"><div class="cb"></div><div class="ct">1H: Price retesting bearish FVG</div></div>
+      </div>
+      <div class="pinfo"><span id="pct-rb">0% complete</span><button class="rbtn" onclick="rst('rb')">Reset</button></div>
+    </div>
+
+    <!-- B-TRADE BULL -->
+    <div class="card">
+      <div class="card-hdr hdr-pur"><i class="ti ti-trending-up"></i> B-Trade — Bullish Calls <span class="bs bg-b" id="bsc-bb">0/5</span></div>
+      <div class="pbar"><div class="pfill" id="pf-bb" style="background:var(--pur);width:0%"></div></div>
+      <div class="cls">
+        <div class="slbl">1H structure</div>
+        <div class="ci" onclick="ck(this,'bb')" data-g="bb"><div class="cb"></div><div class="ct">1H: Price above 50 SMA</div></div>
+        <div class="ci" onclick="ck(this,'bb')" data-g="bb"><div class="cb"></div><div class="ct">1H: Displacement volume <b>≥1.5×</b> avg</div></div>
+        <div class="ci" onclick="ck(this,'bb')" data-g="bb"><div class="cb"></div><div class="ct">1H: Retrace volume <b>≤0.7×</b> avg</div></div>
+        <div class="slbl">15M confirmation <span class="tgnew">B-Trade gate</span></div>
+        <div class="ci" onclick="ck(this,'bb')" data-g="bb"><div class="cb"></div><div class="ct">15M: Price above 50 SMA + slope up</div></div>
+        <div class="ci" onclick="ck(this,'bb')" data-g="bb"><div class="cb"></div><div class="ct">1H: Price retesting bullish FVG</div></div>
+      </div>
+      <div class="pinfo"><span id="pct-bb">0% complete</span><button class="rbtn" onclick="rst('bb')">Reset</button></div>
+    </div>
+
+    <!-- B-TRADE BEAR -->
+    <div class="card">
+      <div class="card-hdr hdr-pur"><i class="ti ti-trending-down"></i> B-Trade — Bearish Puts <span class="bs bg-b" id="bsc-rb2">0/5</span></div>
+      <div class="pbar"><div class="pfill" id="pf-rb2" style="background:var(--pur);width:0%"></div></div>
+      <div class="cls">
+        <div class="slbl">1H structure</div>
+        <div class="ci" onclick="ck(this,'rb2')" data-g="rb2"><div class="cb"></div><div class="ct">1H: Price below 50 SMA</div></div>
+        <div class="ci" onclick="ck(this,'rb2')" data-g="rb2"><div class="cb"></div><div class="ct">1H: Sell-side volume <b>≥1.5×</b> avg</div></div>
+        <div class="ci" onclick="ck(this,'rb2')" data-g="rb2"><div class="cb"></div><div class="ct">1H: Retrace volume <b>≤0.7×</b> avg</div></div>
+        <div class="slbl">15M confirmation <span class="tgnew">B-Trade gate</span></div>
+        <div class="ci" onclick="ck(this,'rb2')" data-g="rb2"><div class="cb"></div><div class="ct">15M: Price below 50 SMA + slope down</div></div>
+        <div class="ci" onclick="ck(this,'rb2')" data-g="rb2"><div class="cb"></div><div class="ct">1H: Price retesting bearish FVG</div></div>
+      </div>
+      <div class="pinfo"><span id="pct-rb2">0% complete</span><button class="rbtn" onclick="rst('rb2')">Reset</button></div>
+    </div>
+
+    <!-- Options + Management full width -->
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-hdr hdr-mgmt"><i class="ti ti-adjustments"></i> Options metrics + Trade management <span class="bs bg-blu" id="bsc-m">0/10</span></div>
+      <div class="pbar"><div class="pfill" id="pf-m" style="background:var(--blu);width:0%"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:7px 13px;">
+        <div>
+          <div class="slbl">Options metrics</div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">DTE: 10–14 (IV rank &lt;20) or 14–21 (20–40)</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">Delta 0.50–0.65 confirmed on chain</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">IV rank 15–40, avoid 60+</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">OI ≥500 · tight spread · theta ≤8%</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">No earnings within 3–5 days</div></div>
+        </div>
+        <div>
+          <div class="slbl">Risk sizing</div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct"><b>A-Trade:</b> 3–5% ($270–$450)</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct"><b>B-Trade:</b> 2% max ($180)</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">PT1 at +33% — sell 40%, move stop to BE</div></div>
+        </div>
+        <div>
+          <div class="slbl">Exit rules</div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">Close all by 3:45 PM · Friday by 3:00 PM</div></div>
+          <div class="ci" onclick="ck(this,'m')" data-g="m"><div class="cb"></div><div class="ct">Exit if no movement after 45–60 min</div></div>
+        </div>
+      </div>
+      <div class="pinfo"><span id="pct-m">0% complete</span><button class="rbtn" onclick="rst('all')">Reset all</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ STRIKES -->
+<div class="pg" id="pg-st">
+  <div id="local-warn" style="display:none;padding:8px 13px;border:1px solid rgba(245,158,11,.35);border-radius:var(--r);background:var(--amb-d);font-size:11px;color:var(--amb);margin-bottom:10px;font-family:var(--mono);">&#9888; Auto-fetch requires HTTPS. <b>Host on GitHub Pages</b> for live prices. Type price manually below in the meantime.</div>
+  <div class="ibox">When a Pine Script alert fires, come here → select the ticker → fetch price → find strikes. Then verify delta, IV rank, and OI on your broker chain and <a href="https://marketchameleon.com" target="_blank" class="lnk">Market Chameleon</a>.</div>
+  <div class="row-gap">
+    <div class="fg" style="min-width:130px">
+      <div class="flbl">Ticker</div>
+      <select id="s-tk" onchange="autoSpacing()">
+        <optgroup label="Your Core Watchlist">
+          <option>SPY</option><option>QQQ</option>
+          <option>AMD</option><option>NVDA</option><option>AAPL</option>
+          <option>AMZN</option><option>MSFT</option><option>NFLX</option><option>META</option>
+        </optgroup>
+        <optgroup label="Suggested">
+          <option>TSLA</option><option>GLD</option><option>GOOGL</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="fg" style="min-width:160px">
+      <div class="flbl">Live price (Yahoo)</div>
+      <div class="fl" style="flex-wrap:nowrap">
+        <input type="number" id="s-px" placeholder="or type manually">
+        <button class="cbtn" onclick="fetchPx()" style="padding:8px 12px;flex-shrink:0"><i class="ti ti-refresh" style="font-size:14px"></i> Fetch</button>
+      </div>
+      <div class="fetchst" id="s-st"></div>
+      <div style="font-size:10px;color:var(--txt3);margin-top:2px;font-family:var(--mono)" id="iv-hint"></div>
+    </div>
+    <div class="fg" style="min-width:120px">
+      <div class="flbl">Direction</div>
+      <select id="s-dir"><option value="bull">Bullish (Calls)</option><option value="bear">Bearish (Puts)</option></select>
+    </div>
+    <div class="fg" style="min-width:90px">
+      <div class="flbl">DTE</div>
+      <select id="s-dte"><option value="10">10 DTE</option><option value="12" selected>12 DTE</option><option value="14">14 DTE</option><option value="21">21 DTE</option></select>
+    </div>
+    <div class="fg" style="min-width:130px">
+      <div class="flbl">Strike spacing</div>
+      <select id="s-sp"><option value="1">$1 — SPY/QQQ/AMD/NVDA</option><option value="2.5">$2.50 — AAPL/MSFT/GLD</option><option value="5">$5 — AMZN/META/NFLX</option><option value="25">$25 — GOOGL/TSLA</option></select>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:7px">
+      <button class="cbtn" onclick="calcS()"><i class="ti ti-search" style="font-size:13px"></i> Find Strikes</button>
+      <button class="gbtn" onclick="openMC()"><i class="ti ti-external-link"></i>IV rank</button>
+    </div>
+  </div>
+  <div id="s-res"><div class="no-z">Select ticker → Fetch price → Find Strikes</div></div>
+  <div style="font-size:11px;color:var(--txt3);margin-top:9px;line-height:1.8;">
+    Premium estimates assume ~25% IV baseline — actual premiums will vary. Always confirm live delta, OI, and IV rank before entering.<br>
+    IV rank + earnings check: <a href="https://marketchameleon.com" class="lnk" target="_blank">marketchameleon.com</a> &nbsp;·&nbsp;
+    Earnings calendar: <a href="https://marketchameleon.com/Reports/EarningsCalendar" class="lnk" target="_blank">MC Earnings Calendar</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ NEWS -->
+<div class="pg" id="pg-nw">
+
+  <!-- ── Trade rules banner ── -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;">
+    <div class="ibox" style="margin:0;border-color:rgba(239,68,68,.3)">
+      <strong style="color:var(--red)">HIGH impact rules:</strong> Avoid new entries 1–2 days before. If already in a trade, close it the day prior. Do not hold options through FOMC, NFP, or CPI prints — IV expansion will destroy premium.
+    </div>
+    <div class="ibox" style="margin:0;border-color:rgba(245,158,11,.3)">
+      <strong style="color:var(--amb)">MED impact rules:</strong> Check before entering. Can shift 1H structure and invalidate active FVGs on SPY/QQQ/MNQ/MES. Wait for the release to pass and structure to re-establish before entering.
+    </div>
+  </div>
+
+  <!-- ── Live Economic Calendar (Investing.com widget — HIGH + MED only) ── -->
+  <div class="sech">Live economic calendar — this week (High &amp; Medium impact)</div>
+  <div style="border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;background:var(--bg2);margin-bottom:11px;">
+    <div style="padding:8px 13px;background:var(--bg3);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:11px;font-family:var(--mono);color:var(--txt3)">Powered by Investing.com — updates automatically each week</span>
+      <a href="https://www.investing.com/economic-calendar/" target="_blank" class="gbtn" style="padding:4px 10px;font-size:11px"><i class="ti ti-external-link" style="font-size:11px"></i> Full calendar</a>
+    </div>
+    <!-- Investing.com Economic Calendar Widget — medium + high impact, USD only -->
+    <div id="economicCalendarWidget">
+      <div style="overflow:hidden;border-radius:0 0 var(--rl) var(--rl);">
+        <iframe
+          src="https://sslecal2.investing.com?ecoDayBackground=%23111111&defaultFont=%23ede8df&innerBorderColor=%23222222&borderColor=%23F97316&columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone&countries=5&importance=2,3&calType=week&timeZone=8&lang=1"
+          width="100%"
+          height="420"
+          frameborder="0"
+          allowtransparency="true"
+          style="display:block;background:#111111;border:none;"
+          title="Economic Calendar"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Earnings this week ── -->
+  <div class="sech">Earnings this week — your tickers</div>
+  <div style="border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;background:var(--bg2);margin-bottom:11px;">
+    <div style="padding:8px 13px;background:var(--bg3);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:11px;font-family:var(--mono);color:var(--txt3)">Market Chameleon earnings calendar — live</span>
+      <a href="https://marketchameleon.com/Reports/EarningsCalendar" target="_blank" class="gbtn" style="padding:4px 10px;font-size:11px"><i class="ti ti-external-link" style="font-size:11px"></i> Full earnings calendar</a>
+    </div>
+    <div id="earnings-grid" style="padding:12px 14px;">
+      <!-- Populated by JS on page load -->
+      <div style="font-size:12px;color:var(--txt3);font-family:var(--mono);text-align:center;padding:16px;">Loading earnings data…</div>
+    </div>
+  </div>
+
+  <!-- ── Quick rules reference ── -->
+  <div class="sech">Recurring high-impact schedule — reference</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div class="nrow hi" style="margin:0"><div class="imp ih">HIGH</div><div><div style="font-size:13px;font-weight:500">FOMC / Fed rate decision</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">Every 6–8 weeks · Wed 2:00 PM ET</div></div></div>
+    <div class="nrow hi" style="margin:0"><div class="imp ih">HIGH</div><div><div style="font-size:13px;font-weight:500">Non-Farm Payrolls</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">1st Friday monthly · 8:30 AM ET</div></div></div>
+    <div class="nrow hi" style="margin:0"><div class="imp ih">HIGH</div><div><div style="font-size:13px;font-weight:500">CPI / PPI inflation</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">Monthly · 8:30 AM ET</div></div></div>
+    <div class="nrow med" style="margin:0"><div class="imp im">MED</div><div><div style="font-size:13px;font-weight:500">Jobless claims</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">Every Thursday · 8:30 AM ET</div></div></div>
+    <div class="nrow med" style="margin:0"><div class="imp im">MED</div><div><div style="font-size:13px;font-weight:500">PMI / ISM data</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">Mon/Wed · 10:00 AM ET</div></div></div>
+    <div class="nrow med" style="margin:0"><div class="imp im">MED</div><div><div style="font-size:13px;font-weight:500">GDP / Retail Sales</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">Monthly · 8:30 AM ET</div></div></div>
+  </div>
+
+  <div class="fl" style="gap:7px;flex-wrap:wrap">
+    <a href="https://www.forexfactory.com/calendar" target="_blank" class="gbtn"><i class="ti ti-external-link"></i>ForexFactory</a>
+    <a href="https://www.investing.com/economic-calendar/" target="_blank" class="gbtn"><i class="ti ti-external-link"></i>Investing.com</a>
+    <a href="https://marketchameleon.com/Reports/EarningsCalendar" target="_blank" class="gbtn"><i class="ti ti-external-link"></i>MC Earnings</a>
+    <a href="https://unusualwhales.com" target="_blank" class="gbtn"><i class="ti ti-external-link"></i>Unusual Whales</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ RISK -->
+<div class="pg" id="pg-ri">
+  <div class="g2" style="margin-bottom:11px">
+    <div class="ibox" style="margin:0"><strong>A-Trade risk:</strong> 3% standard ($270) · 5% high-conviction ($450). Use 5% only when 4H+1H+15M all aligned perfectly.</div>
+    <div class="ibox" style="margin:0;border-color:rgba(167,139,250,.25)"><strong style="color:var(--pur)">B-Trade risk:</strong> 2% max ($180). B-trades are frequent — keep size small, let the edge compound.</div>
+  </div>
+  <div class="sech">Position size calculator</div>
+  <div class="row-gap">
+    <div class="fg" style="flex:1;min-width:120px"><div class="flbl">Option ask price</div><input type="number" id="ri-prem" placeholder="e.g. 2.50" oninput="calcRisk()"></div>
+    <div class="fg" style="flex:1;min-width:120px">
+      <div class="flbl">Trade type</div>
+      <select id="ri-type" onchange="calcRisk()">
+        <option value="3">A-Trade — 3% ($270)</option>
+        <option value="4">A-Trade — 4% ($360)</option>
+        <option value="5">A-Trade — 5% ($450)</option>
+        <option value="2">B-Trade — 2% ($180)</option>
+      </select>
+    </div>
+    <div class="fg" style="flex:1;min-width:110px">
+      <div class="flbl">Stop % on option</div>
+      <select id="ri-sl" onchange="calcRisk()">
+        <option value="40">40% — Standard</option>
+        <option value="50">50% — Wide</option>
+        <option value="30">30% — Tight</option>
+      </select>
+    </div>
+  </div>
+  <div class="rgrid">
+    <div class="rc"><div class="rclbl">Max risk $</div><div class="rcval" id="rc-risk">$—</div><div class="rcsub" id="rc-risksub">select type above</div></div>
+    <div class="rc"><div class="rclbl">Max contracts</div><div class="rcval" id="rc-cts">—</div><div class="rcsub">based on premium + stop %</div></div>
+    <div class="rc"><div class="rclbl">Total cost</div><div class="rcval" id="rc-cost">$—</div><div class="rcsub">premium × 100 × contracts</div></div>
+  </div>
+  <div class="sech" style="margin-top:4px">Profit take levels</div>
+  <div id="pt-levels">
+    <div class="ptrow"><div class="ptn ptst">STOP</div><div class="ptxt">Premium drops 40% from entry — hard exit, no exceptions</div><div class="ppct" id="pt-stop">—</div></div>
+    <div class="ptrow"><div class="ptn pt1">PT 1</div><div class="ptxt">+30–35%: Sell 40% of contracts. Move stop to breakeven on remaining.</div><div class="ppct" id="pt1">—</div></div>
+    <div class="ptrow"><div class="ptn pt2">PT 2</div><div class="ptxt">+55–65%: Sell another 35%. Running 25% free with trailing stop.</div><div class="ppct" id="pt2">—</div></div>
+    <div class="ptrow"><div class="ptn" style="background:var(--pur-d);color:var(--pur);border:1px solid rgba(167,139,250,.3)">RUNNER</div><div class="ptxt">+80–100%+: Trail at -20% from premium high. Exit by 3:45 PM.</div><div class="ppct" id="pt3">—</div></div>
+  </div>
+  <div class="ibox" style="margin-top:11px">
+    <strong>Expected value at 60% win rate:</strong> A-Trade avg win 40% / avg loss 35% → EV ~+$55/trade.
+    B-Trade avg win 30% / avg loss 35% → EV ~+$9/trade (lower, but frequency compensates).<br>
+    <strong>Daily loss limit:</strong> 2 consecutive losses → stop for the day. 3 losing days in a week → cut size 50% next week.
+  </div>
+</div>
+
+</div><!-- main -->
+</div><!-- app -->
+
+<script>
+
+// ── Per-ticker config: typical IV%, last-known approx price (rough reference only)
+const TK_CONFIG = {
+  SPY:  {iv:0.15, ref:585},  QQQ:  {iv:0.18, ref:500},
+  AMD:  {iv:0.50, ref:105},  NVDA: {iv:0.45, ref:115},
+  AAPL: {iv:0.25, ref:210},  AMZN: {iv:0.30, ref:210},
+  MSFT: {iv:0.22, ref:430},  NFLX: {iv:0.35, ref:1000},
+  META: {iv:0.30, ref:620},  TSLA: {iv:0.55, ref:340},
+  GLD:  {iv:0.12, ref:240},  GOOGL:{iv:0.28, ref:175},
+};
+
+// Clock + market status
+function updateClock(){
+  const now = new Date();
+  const et  = new Date(now.toLocaleString('en-US',{timeZone:'America/Chicago'}));
+  const h   = et.getHours(), m = et.getMinutes(), s = et.getSeconds();
+  const p   = n => n.toString().padStart(2,'0');
+  document.getElementById('clock').textContent = p(h)+':'+p(m)+':'+p(s)+' ET';
+
+  // Market status badge
+  const mb  = document.getElementById('mkt-badge');
+  const day = et.getDay(), mins = h*60+m;
+  if(day===0||day===6)              { mb.className='mkt mkt-closed'; mb.textContent='CLOSED';     }
+  else if(mins>=570&&mins<960)      { mb.className='mkt mkt-open';   mb.textContent='MARKET OPEN';}
+  else if(mins>=240&&mins<570)      { mb.className='mkt mkt-pre';    mb.textContent='PRE-MARKET'; }
+  else if(mins>=960&&mins<1200)     { mb.className='mkt mkt-pre';    mb.textContent='AFTER-HRS';  }
+  else                              { mb.className='mkt mkt-closed'; mb.textContent='CLOSED';     }
+
+  // Greeting — updates once per minute (check on second 0)
+  if(s === 0 || !window._greetingSet) {
+    window._greetingSet = true;
+    const grEl = document.getElementById('greeting');
+    if(grEl) {
+      let greet;
+      if(h >= 5  && h < 12) greet = 'Good morning, Alex';
+      else if(h >= 12 && h < 17) greet = 'Good afternoon, Alex';
+      else if(h >= 17 && h < 21) greet = 'Good evening, Alex';
+      else                        greet = 'Good night, Alex';
+      grEl.textContent = greet;
+    }
+  }
+}
+setInterval(updateClock,1000); updateClock();
+
+// Show local-file warning if not on HTTPS
+if(location.protocol !== 'https:'){
+  const w = document.getElementById('local-warn');
+  if(w) w.style.display = 'block';
+}
+// Init spacing + IV hint for default ticker
+autoSpacing();
+loadEarnings();
+
+// Nav — handles desktop tabs + mobile bottom nav
+function pg(id, btn){
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.mnav-btn').forEach(t => t.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  // Highlight the clicked button (desktop tab or mobile nav)
+  btn.classList.add('on');
+  // Mirror state: if desktop tab clicked, sync mobile nav and vice versa
+  const pgId = id;
+  document.querySelectorAll('.tab').forEach(t => {
+    if(t.getAttribute('onclick') && t.getAttribute('onclick').includes("'"+pgId+"'")) t.classList.add('on');
+  });
+  document.querySelectorAll('.mnav-btn').forEach(t => {
+    if(t.getAttribute('data-pg') === pgId) t.classList.add('on');
+  });
+  // Scroll main to top on page switch
+  const main = document.querySelector('.main');
+  if(main) main.scrollTop = 0;
+}
+
+// Checklist
+function ck(el,g){el.classList.toggle('ck');upd(g);}
+function upd(g){
+  const all=document.querySelectorAll('[data-g="'+g+'"]');
+  const n=document.querySelectorAll('[data-g="'+g+'"].ck').length;
+  const t=all.length, pct=Math.round(n/t*100);
+  const map={
+    ab:['pf-ab','bsc-ab','pct-ab'],
+    rb:['pf-rb','bsc-rb','pct-rb'],
+    bb:['pf-bb','bsc-bb','pct-bb'],
+    rb2:['pf-rb2','bsc-rb2','pct-rb2'],
+    m:['pf-m','bsc-m','pct-m']
+  };
+  const [pf,sc,pc]=map[g];
+  document.getElementById(pf).style.width=pct+'%';
+  document.getElementById(sc).textContent=n+'/'+t;
+  document.getElementById(pc).textContent=pct+'% complete';
+}
+function rst(g){
+  if(g==='all'){
+    ['ab','rb','bb','rb2','m'].forEach(x=>{
+      document.querySelectorAll('[data-g="'+x+'"]').forEach(e=>e.classList.remove('ck'));
+      upd(x);
+    });
+  } else {
+    document.querySelectorAll('[data-g="'+g+'"]').forEach(e=>e.classList.remove('ck'));
+    upd(g);
+  }
+}
+
+
+// ── Yahoo Finance fetch with CORS proxy fallback chain
+async function fetchPx(){
+  const tk = document.getElementById('s-tk').value;
+  const st = document.getElementById('s-st');
+  st.textContent = 'Fetching ' + tk + '…';
+  st.style.color = 'var(--txt3)';
+
+  // Three URL strategies: direct Yahoo, then two free CORS proxies
+  const urls = [
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(tk)}?interval=1m&range=1d`,
+    `https://corsproxy.io/?${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+tk+'?interval=1m&range=1d')}`,
+    `https://api.allorigins.win/get?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+tk+'?interval=1m&range=1d')}`,
+  ];
+
+  for (let i = 0; i < urls.length; i++) {
+    try {
+      const r = await fetch(urls[i], {signal: AbortSignal.timeout(6000)});
+      if (!r.ok) continue;
+      let raw = await r.json();
+      // allorigins wraps the body in {contents:'...'}
+      if (raw.contents) raw = JSON.parse(raw.contents);
+      const px   = raw?.chart?.result?.[0]?.meta?.regularMarketPrice;
+      const prev = raw?.chart?.result?.[0]?.meta?.chartPreviousClose;
+      if (!px) continue;
+      document.getElementById('s-px').value = px.toFixed(2);
+      const ch = prev ? ((px - prev) / prev * 100) : null;
+      const chStr = ch != null ? (ch >= 0 ? ' +' + ch.toFixed(2) + '%' : ' ' + ch.toFixed(2) + '%') : '';
+      st.textContent = '$' + px.toFixed(2) + chStr + ' (Yahoo live)';
+      st.style.color  = ch != null && ch < 0 ? 'var(--red)' : 'var(--grn)';
+      return; // success — stop trying
+    } catch(e) { /* try next proxy */ }
+  }
+
+  // All failed — show ref price hint so user knows what to type
+  const ref = TK_CONFIG[tk]?.ref;
+  const hint = ref ? ` — ${tk} is ~$${ref} (approximate, type current price)` : ' — type current price manually';
+  st.textContent = 'Auto-fetch failed' + hint;
+  st.style.color  = 'var(--amb)';
+  // Note: fetch works reliably on GitHub Pages (HTTPS). Local file:// blocks cross-origin.
+}
+
+// ── Auto strike spacing + IV hint by ticker
+function autoSpacing(){
+  const tk = document.getElementById('s-tk').value;
+  const sp = document.getElementById('s-sp');
+  const spMap = {
+    SPY:'1',QQQ:'1',AMD:'1',NVDA:'1',
+    AAPL:'2.5',MSFT:'2.5',GLD:'2.5',
+    AMZN:'5',META:'5',NFLX:'5',
+    GOOGL:'25',TSLA:'25'
+  };
+  if (spMap[tk]) {
+    for (let i = 0; i < sp.options.length; i++) {
+      if (sp.options[i].value === spMap[tk]) { sp.selectedIndex = i; break; }
+    }
+  }
+  // Update IV hint label
+  const cfg = TK_CONFIG[tk];
+  const hint = document.getElementById('iv-hint');
+  if (hint && cfg) hint.textContent = `Typical IV for ${tk}: ~${Math.round(cfg.iv*100)}%`;
+}
+
+// ── Strike calculator with per-ticker IV baseline
+function calcS(){
+  const px  = parseFloat(document.getElementById('s-px').value);
+  const dir = document.getElementById('s-dir').value;
+  const sp  = parseFloat(document.getElementById('s-sp').value);
+  const dte = document.getElementById('s-dte').value;
+  const tk  = document.getElementById('s-tk').value;
+  if (!px) { alert('Fetch price first or type it manually'); return; }
+
+  const atm    = Math.round(px / sp) * sp;
+  const isBull = dir === 'bull';
+  // Use per-ticker IV baseline — much more accurate premium estimate
+  const ivEst  = TK_CONFIG[tk]?.iv || 0.25;
+  const t      = parseFloat(dte) / 365;
+
+  const rows = isBull ? [
+    {k: Math.round((px*0.970)/sp)*sp,  d:'~0.68', tag:'av',    n:'Too deep ITM — delta too high'},
+    {k: Math.round((px*0.985)/sp)*sp,  d:'~0.63', tag:'ideal', n:'Strong directional — upper range'},
+    {k: Math.round((px*0.993)/sp)*sp,  d:'~0.57', tag:'ideal', n:'Sweet spot — best balance'},
+    {k: atm,                            d:'~0.50', tag:'ideal', n:'ATM — most liquid, FVG reaction entry'},
+    {k: Math.round((px*1.008)/sp)*sp,  d:'~0.43', tag:'ok',    n:'Slightly OTM — lower cost, just below range'},
+    {k: Math.round((px*1.016)/sp)*sp,  d:'~0.36', tag:'av',    n:'Below 0.40 delta — avoid per rules'},
+  ] : [
+    {k: Math.round((px*1.030)/sp)*sp,  d:'~-0.68', tag:'av',    n:'Too deep ITM put'},
+    {k: Math.round((px*1.015)/sp)*sp,  d:'~-0.63', tag:'ideal', n:'Strong directional put — upper range'},
+    {k: Math.round((px*1.007)/sp)*sp,  d:'~-0.57', tag:'ideal', n:'Sweet spot'},
+    {k: atm,                            d:'~-0.50', tag:'ideal', n:'ATM put — FVG rejection entry'},
+    {k: Math.round((px*0.992)/sp)*sp,  d:'~-0.43', tag:'ok',    n:'OTM put — slightly below range'},
+    {k: Math.round((px*0.984)/sp)*sp,  d:'~-0.36', tag:'av',    n:'Magnitude below 0.40 — avoid'},
+  ];
+
+  let html = `<div class="stbl"><table>
+    <thead><tr>
+      <th>Strike</th><th>Est. Delta</th><th>Moneyness</th>
+      <th>DTE</th><th>Est. Premium</th><th>Fit</th><th>Note</th>
+    </tr></thead><tbody>`;
+
+  rows.forEach(r => {
+    const mono  = r.k < px ? 'ITM' : r.k > px ? 'OTM' : 'ATM';
+    const intr  = isBull ? Math.max(0, px - r.k) : Math.max(0, r.k - px);
+    const dVal  = Math.abs(parseFloat(r.d.replace('~','').replace('-','')));
+    const tv    = px * ivEst * Math.sqrt(t) * dVal;
+    const ep    = (intr + tv) * 0.95;
+    const lo    = (ep * 0.82).toFixed(2);
+    const hi    = (ep * 1.20).toFixed(2);
+    const epRange = ep > 0.01 ? `$${lo}–$${hi}` : '< $0.50';
+    const hl    = r.tag === 'ideal' ? ' class="hl"' : '';
+    const pcl   = r.tag === 'ideal' ? ' class="pc"' : '';
+    const badge = r.tag === 'ideal'
+      ? '<span class="t-ideal">Ideal</span>'
+      : r.tag === 'ok'
+        ? '<span class="t-ok">OK</span>'
+        : '<span class="t-av">Avoid</span>';
+    html += `<tr${hl}><td${pcl}>${r.k.toFixed(sp < 5 ? 2 : 0)}</td><td>${r.d}</td><td>${mono}</td><td>${dte}</td><td style="color:var(--or2)">${epRange}</td><td>${badge}</td><td style="font-family:var(--sans);font-size:11px;color:var(--txt3)">${r.n}</td></tr>`;
+  });
+
+  html += `</tbody></table></div>`;
+  html += `<div style="font-size:11px;color:var(--txt3);margin-top:8px;font-family:var(--mono)">${tk} @ $${px.toFixed(2)} · ${isBull?'Calls':'Puts'} · ${dte} DTE · $${sp} spacing · IV baseline ~${Math.round(ivEst*100)}% · verify live greeks before entry</div>`;
+  document.getElementById('s-res').innerHTML = html;
+}
+
+function openMC(){
+  const tk=document.getElementById('s-tk').value;
+  window.open('https://marketchameleon.com/Overview/'+tk+'/IV/','_blank');
+}
+
+// ── Earnings check — load this week dates for your tickers via MC
+function loadEarnings(){
+  const tickers = ['SPY','QQQ','AMD','NVDA','AAPL','AMZN','MSFT','NFLX','META','TSLA','GLD','GOOGL'];
+  const grid = document.getElementById('earnings-grid');
+  if(!grid) return;
+
+  // Get this week Mon–Fri in ET
+  const now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const day = now.getDay(); // 0=Sun
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
+  const friday = new Date(monday); friday.setDate(monday.getDate() + 4);
+
+  const fmt = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const weekRange = fmt(monday) + ' – ' + fmt(friday);
+
+  // Build the display — links to each ticker's earnings page on Market Chameleon
+  let html = `<div style="font-size:11px;color:var(--txt3);font-family:var(--mono);margin-bottom:10px;">Week of ${weekRange} — click any ticker to check earnings date on Market Chameleon</div>`;
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px;">';
+  tickers.forEach(tk => {
+    const url = 'https://marketchameleon.com/Overview/' + tk + '/Earnings/';
+    html += `<a href="${url}" target="_blank" style="display:block;padding:8px 11px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--bg3);text-decoration:none;transition:all .12s;" onmouseover="this.style.borderColor='var(--or)'" onmouseout="this.style.borderColor='var(--bdr)'">
+      <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--or)">${tk}</div>
+      <div style="font-size:10px;color:var(--txt3);margin-top:3px">Check earnings ↗</div>
+    </a>`;
+  });
+  html += '</div>';
+  html += `<div style="font-size:10px;color:var(--txt3);margin-top:10px;font-family:var(--mono);">Rule: no options entry within 3–5 days of earnings. IV spike risk.</div>`;
+  grid.innerHTML = html;
+}
+
+// Risk calculator
+function calcRisk(){
+  const prem=parseFloat(document.getElementById('ri-prem').value);
+  const rp=parseFloat(document.getElementById('ri-type').value)/100;
+  const sl=parseFloat(document.getElementById('ri-sl').value)/100;
+  const acct=9000;
+  const maxRisk=acct*rp;
+  document.getElementById('rc-risk').textContent='$'+maxRisk.toFixed(0);
+  document.getElementById('rc-risksub').textContent=Math.round(rp*100)+'% of $9,000';
+  if(!prem||isNaN(prem)){
+    ['rc-cts','rc-cost','pt-stop','pt1','pt2','pt3'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.textContent=id.startsWith('rc')?'—':'—';
+    }); return;
+  }
+  const lossPer=prem*100*sl;
+  const cts=Math.max(1,Math.floor(maxRisk/lossPer));
+  const cost=cts*prem*100;
+  document.getElementById('rc-cts').textContent=cts+' contract'+(cts!==1?'s':'');
+  document.getElementById('rc-cost').textContent='$'+cost.toFixed(0);
+  document.getElementById('pt-stop').textContent='$'+(prem*(1-0.40)).toFixed(2)+'/ct';
+  document.getElementById('pt1').textContent='$'+(prem*1.325).toFixed(2)+'/ct';
+  document.getElementById('pt2').textContent='$'+(prem*1.60).toFixed(2)+'/ct';
+  document.getElementById('pt3').textContent='$'+(prem*1.90).toFixed(2)+'/ct';
+}
+</script>
+</body>
+</html>
